@@ -26,3 +26,6 @@ hs_err_pid*
 .idea/*.xml
 
 .idea/libraries/
+
+# local files
+.target/*

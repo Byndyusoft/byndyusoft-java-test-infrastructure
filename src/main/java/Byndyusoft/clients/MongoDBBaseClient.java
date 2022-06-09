@@ -40,7 +40,7 @@ public class MongoDBBaseClient {
             if(!Objects.isNull(collection.find(query).first())) {
                 Document document = collection.find(query).first();
                 fieldValue=document.get(varKey).toString();
-                System.out.println(""+ varKey +" = "+ fieldValue);
+                System.out.println(varKey + " = " + fieldValue);
                 break;
             }
             sleep(mongoSleep);

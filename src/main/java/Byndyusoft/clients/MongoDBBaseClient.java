@@ -14,14 +14,13 @@ import org.bson.Document;
 import java.io.IOException;
 import java.util.Objects;
 
-import static io.restassured.RestAssured.given;
 import static java.lang.Thread.sleep;
 
 public class MongoDBBaseClient {
 
     private static final int mongoSleep = 1000;
 
-    public MongoClient createConnect() throws IOException {
+    protected static MongoClient createConnect() throws IOException {
         ConnectionString connectionString = new ConnectionString(new Property().getProperty("mongoDB.connectionString"));
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
@@ -31,8 +30,9 @@ public class MongoDBBaseClient {
         return MongoClients.create(settings);
     }
 
-    public String find(String collectionName, String varKey, String varValue) throws IOException, InterruptedException {
-        MongoDatabase database = this.createConnect().getDatabase(new Property().getProperty("mongoDB.database"));
+    public static String find(String collectionName, String varKey, String varValue) throws IOException,
+            InterruptedException {
+        MongoDatabase database = createConnect().getDatabase(new Property().getProperty("mongoDB.database"));
         MongoCollection<Document> collection = database.getCollection(collectionName);
         BasicDBObject query = new BasicDBObject(varKey, varValue);
         String fieldValue = null;
@@ -40,7 +40,7 @@ public class MongoDBBaseClient {
             if(!Objects.isNull(collection.find(query).first())) {
                 Document document = collection.find(query).first();
                 fieldValue=document.get(varKey).toString();
-                System.out.println(""+varKey+" = "+fieldValue);
+                System.out.println(""+ varKey +" = "+ fieldValue);
                 break;
             }
             sleep(mongoSleep);

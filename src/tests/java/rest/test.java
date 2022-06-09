@@ -1,5 +1,6 @@
 package rest;
 
+import Byndyusoft.clients.MongoDBBaseClient;
 import Byndyusoft.clients.RestApiBaseClient;
 import Byndyusoft.configs.Property;
 import com.google.gson.JsonObject;
@@ -40,6 +41,12 @@ public class test {
 
         RestApiBaseClient.postRequest(headerName,headerValue,hostUrl,jsonBody);
 
+    }
+
+    @Test
+    public void mongoFindTest() throws IOException, InterruptedException {
+        String var = MongoDBBaseClient.find("collectionName", "varKey", "varValue");
+        System.out.println(var);
     }
 
 }

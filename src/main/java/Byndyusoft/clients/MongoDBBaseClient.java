@@ -48,4 +48,14 @@ public class MongoDBBaseClient {
         return fieldValue;
     }
 
+    public static void dropCollection(String collectionName) throws IOException {
+        MongoDatabase database = createConnect().getDatabase(new Property().getProperty("mongoDB.database"));
+        database.getCollection(collectionName).drop();
+    }
+
+    public static void dropDatabase() throws IOException {
+        MongoDatabase database = createConnect().getDatabase(new Property().getProperty("mongoDB.database"));
+        database.drop();
+    }
+
 }

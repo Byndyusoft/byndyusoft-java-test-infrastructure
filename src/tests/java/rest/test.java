@@ -4,6 +4,7 @@ import Byndyusoft.clients.MongoDBBaseClient;
 import Byndyusoft.clients.RestApiBaseClient;
 import Byndyusoft.configs.Property;
 import com.google.gson.JsonObject;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -40,6 +41,7 @@ public class test {
         jsonBody.addProperty("status", "active");
 
         RestApiBaseClient.postRequest(headerName,headerValue,hostUrl,jsonBody);
+        //Assert.assertEquals();
 
     }
 

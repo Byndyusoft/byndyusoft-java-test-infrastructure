@@ -8,11 +8,15 @@ import static io.restassured.RestAssured.*;
 
 public class RestApiBaseClient {
 
-    public static void getRequest(String headerName, String headerValue, String hostUrl) {
+    public static String getRequest(String headerName, String headerValue, String hostUrl) {
         given()
                 .header(headerName, headerValue)
                 .when().get(hostUrl)
-                .then().statusCode(200).log().status().log().body();
+                .then().log().status().log().body();
+
+        String statusCode = given().header(headerName, headerValue).when().get(hostUrl).then().log().status().toString();
+
+        return statusCode;
     }
 
     public static void postRequest(String headerName, String headerValue, String hostUrl, JsonObject jsonBody) {
@@ -22,7 +26,15 @@ public class RestApiBaseClient {
                 .header(headerName, headerValue)
                 .log().all()
                 .when().post(hostUrl)
-                .then().statusCode(200).log().status().log().body();
+                .then().log().status().log().body();
+    }
+
+    public static String getHttpStatus() {
+
+
+        String httpStatus = "";
+
+        return httpStatus;
     }
 
 }

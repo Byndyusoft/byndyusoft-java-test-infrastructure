@@ -1,13 +1,15 @@
 package rest;
 
 import Byndyusoft.clients.MongoDBBaseClient;
+import Byndyusoft.clients.PostgreSqlBaseClient;
 import Byndyusoft.clients.RestApiBaseClient;
 import Byndyusoft.configs.Property;
+import Byndyusoft.enums.SQLStatements;
 import com.google.gson.JsonObject;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 
 public class test {
@@ -49,6 +51,14 @@ public class test {
     public void mongoFindTest() throws IOException, InterruptedException {
         String var = MongoDBBaseClient.find("collectionName", "varKey", "varValue");
         System.out.println(var);
+    }
+
+    @Test
+    public void postgreSqlSelect() throws SQLException, IOException {
+        String query = SQLStatements.selectAllFromDB.getValue();
+        String s = PostgreSqlBaseClient.selectFromPostgre(query);
+
+        System.out.println(s);
     }
 
 }

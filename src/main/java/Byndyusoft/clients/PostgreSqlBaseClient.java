@@ -3,9 +3,8 @@ package Byndyusoft.clients;
 
 import Byndyusoft.configs.Property;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.sql.*;
 
 
 public class PostgreSqlBaseClient {
@@ -17,25 +16,48 @@ public class PostgreSqlBaseClient {
     protected static Connection createConnection(String uri, String userName, String userPassword) {
         try {
             Class.forName("org.postgresql.Driver").newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        }
+        catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(uri + "?" + "user=" + userName + "&password=" + userPassword);
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
 
         return connection;
     }
 
-    public void connectionToPostgre(String uri, String userName, String userPassword) {
-        this.connection = createConnection(uri, userName, userPassword);
+    public static String selectFromPostgre(String query) throws IOException, SQLException {
+        Connection connection = createConnection(new Property().getProperty("postgreDB.uri"),
+                new Property().getProperty("postgreDB.userName"), new Property().getProperty("postgreDB.userPassword"));
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+
+        while (resultSet.next()) {
+            System.out.println("number = " + resultSet.getString("number"));
+        }
+
+        String s = resultSet.getString(1);
+
+        return s;
+    }
+
+    public void dropTable(String tableName) throws SQLException, IOException {
+        Connection connection = createConnection(new Property().getProperty("postgreDB.uri"),
+                new Property().getProperty("postgreDB.userName"), new Property().getProperty("postgreDB.userPassword"));
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("DROP " + tableName + ";");
+    }
+
+    public void dropDatabase(String databaseName) throws SQLException, IOException {
+        Connection connection = createConnection(new Property().getProperty("postgreDB.uri"),
+                new Property().getProperty("postgreDB.userName"), new Property().getProperty("postgreDB.userPassword"));
+        Statement statement = connection.createStatement();
+        statement.executeQuery("DROP DATABASE [IF EXISTS) " + databaseName + ";");
     }
 
 }

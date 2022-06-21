@@ -46,14 +46,14 @@ public class PostgreSqlBaseClient {
         return s;
     }
 
-    public void dropTable(String tableName) throws SQLException, IOException {
+    public static void dropTable(String tableName) throws SQLException, IOException {
         Connection connection = createConnection(new Property().getProperty("postgreDB.uri"),
                 new Property().getProperty("postgreDB.userName"), new Property().getProperty("postgreDB.userPassword"));
         Statement statement = connection.createStatement();
         statement.executeUpdate("DROP " + tableName + ";");
     }
 
-    public void dropDatabase(String databaseName) throws SQLException, IOException {
+    public static void dropDatabase(String databaseName) throws SQLException, IOException {
         Connection connection = createConnection(new Property().getProperty("postgreDB.uri"),
                 new Property().getProperty("postgreDB.userName"), new Property().getProperty("postgreDB.userPassword"));
         Statement statement = connection.createStatement();

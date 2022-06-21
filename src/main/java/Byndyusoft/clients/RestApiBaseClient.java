@@ -3,23 +3,25 @@ package Byndyusoft.clients;
 
 import com.google.gson.JsonObject;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 
-import static io.restassured.RestAssured.*;
+import java.io.File;
+
+import static io.restassured.RestAssured.given;
 
 public class RestApiBaseClient {
 
-    public static String getRequest(String headerName, String headerValue, String hostUrl) {
+    public static Response getRequest(String headerName, String headerValue, String hostUrl) {
         given()
                 .header(headerName, headerValue)
                 .when().get(hostUrl)
                 .then().log().status().log().body();
 
-        String statusCode = given().header(headerName, headerValue).when().get(hostUrl).then().log().status().toString();
-
-        return statusCode;
+        return (Response) given().header(headerName, headerValue).when().get(hostUrl).then().log().status();
     }
 
-    public static void postRequest(String headerName, String headerValue, String hostUrl, JsonObject jsonBody) {
+    public static Response postRequestWithJsonBody(String headerName, String headerValue, String hostUrl,
+                                                   JsonObject jsonBody) {
         given()
                 .contentType(ContentType.JSON)
                 .body(jsonBody)
@@ -27,14 +29,21 @@ public class RestApiBaseClient {
                 .log().all()
                 .when().post(hostUrl)
                 .then().log().status().log().body();
+
+        return (Response) given().header(headerName, headerValue).when().get(hostUrl).then().log().status();
     }
 
-    public static String getHttpStatus() {
+    public static Response postRequestWithFile(String headerName, String headerValue, String hostUrl, String filePath) {
+        given()
+                .contentType(ContentType.MULTIPART)
+                .multiPart("file", new File(filePath))
+                .body(filePath)
+                .header(headerName, headerValue)
+                .log().all()
+                .when().post(hostUrl)
+                .then().log().body().log().status();
 
-
-        String httpStatus = "";
-
-        return httpStatus;
+        return given().header(headerName, headerValue).when().get(hostUrl).then().extract().response();
     }
 
 }
